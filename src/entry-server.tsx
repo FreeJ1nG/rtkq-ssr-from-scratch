@@ -7,9 +7,14 @@ import { ProviderWrapper } from "~/Providers";
 
 export async function render() {
   const store = createStore();
-  await store.dispatch(
-    pokemonApi.endpoints.getPokemons.initiate({ limit: 20, offset: 0 }),
-  );
+  await Promise.all([
+    store.dispatch(
+      pokemonApi.endpoints.getPokemons.initiate({ limit: 20, offset: 0 }),
+    ),
+    store.dispatch(
+      pokemonApi.endpoints.getPokemonDetail.initiate({ name: "bulbasaur" }),
+    ),
+  ]);
   const appHtml = ReactDomServer.renderToString(
     <React.StrictMode>
       <ProviderWrapper store={store}>
