@@ -3,11 +3,14 @@ import {
   useGetPokemonDetailQuery,
   useGetPokemonsQuery,
 } from "~/features/pokemon/api";
+import PokemonDetailSection from "./components/PokemonDetailSection";
+import EndpointTagDisplay from "./components/EndpointTagDisplay";
 
 export function App() {
   const [limit, setLimit] = useState<number>(20);
   const [selectedPokemonName, setSelectedPokemonName] =
     useState<string>("bulbasaur");
+
   const { pokemons } = useGetPokemonsQuery(
     { limit, offset: 0 },
     {
@@ -17,7 +20,8 @@ export function App() {
       }),
     },
   );
-  const { pokemonDetail } = useGetPokemonDetailQuery(
+
+  const { pokemonDetail, isFetching } = useGetPokemonDetailQuery(
     { name: selectedPokemonName },
     {
       skip: selectedPokemonName === "",
@@ -59,44 +63,13 @@ export function App() {
           </button>
         ))}
       </div>
-      {pokemonDetail && (
-        <div className="mt-10 flex">
-          {pokemonDetail.sprites.front_default && (
-            <img
-              src={pokemonDetail.sprites.front_default}
-              alt="Pokemon front default sprite"
-              className="h-48 w-48"
-            />
-          )}
-          <div className="flex flex-col gap-1">
-            <div className="text-lg font-bold">Statline</div>
-            {pokemonDetail.stats.map((stat) => (
-              <div key={stat.stat.name} className="flex items-center">
-                <div className="w-40">{stat.stat.name}</div>
-                <div>{stat.base_stat}</div>
-              </div>
-            ))}
-            <div className="flex items-center">
-              <div className="w-40">Total stats of</div>
-              <div>
-                {pokemonDetail.stats.reduce(
-                  (acc, cur) => acc + cur.base_stat,
-                  0,
-                )}
-              </div>
-            </div>
-            <div className="mt-4 text-lg font-bold">Abilities</div>
-            {pokemonDetail.abilities.map(({ ability, is_hidden }) => (
-              <div
-                key={ability.name}
-                className={`text-sm ${is_hidden && "font-medium"}`}
-              >
-                {ability.name} {is_hidden && "(Hidden)"}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="flex flex-row">
+        <PokemonDetailSection
+          pokemonDetail={pokemonDetail}
+          isLoading={isFetching}
+        />
+        <EndpointTagDisplay />
+      </div>
     </div>
   );
 }

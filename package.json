@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "SERVER_PORT=4001 node server.js",
-    "build": "tsc && vite build",
+    "build:client": "tsc && vite build --outDir dist/client --ssrManifest",
+    "build:server": "tsc && vite build --outDir dist/server --ssr src/entry-server.tsx",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

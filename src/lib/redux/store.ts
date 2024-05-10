@@ -1,6 +1,7 @@
 import { Action, ThunkDispatch, configureStore } from "@reduxjs/toolkit";
 import reducer from "./reducer";
 import api from "./api";
+import { useDispatch, useStore } from "react-redux";
 
 export const createStore = (preloadedState?: ReturnType<typeof reducer>) => {
   const store = configureStore({
@@ -23,3 +24,6 @@ export type AppStore = ReturnType<typeof createStore>;
 export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"] &
   ThunkDispatch<RootState, void, Action>;
+
+export const useAppStore = useStore.withTypes<AppStore>();
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
